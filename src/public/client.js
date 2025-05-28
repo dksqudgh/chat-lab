@@ -5,18 +5,18 @@
   const socket = new WebSocket(`ws://${window.location.host}/ws`)
   const formEl = document.querySelector('#form')
   const inputEl = document.querySelector('#input')
-  formEl.addEventListener('submit', (e) => {
-    //페이지가 refresh되지 않고 다음 액션을 정상적으로 처리할 수 있다.
+  
+  if(!formEl || !inputEl){ // | 나 || 결과는 같다 차이는 첫조건이 false일때 |는 뒤에도 확인하고 ||는 뒤에는 확인 안한다.
+    throw new Error('formEl or inputEl is null')
+  }
+  formEl.addEventListener('submit',(e)=>{
     e.preventDefault()
-    alert('전송: '+inputEl.value);
-    socket.send(JSON.stringify({
-      nickname: '키위',
-      message: inputEl.value
-    }))
-    inputEl.value = ''
+    socket.send(inputEl.value) //서버측 출력
+    inputEl.value = '' //입력창 비우기(후처리)
   })
   //서버에서 보낸 정보를 받아서 출력하기
   socket.addEventListener('message', (event)=>{
-    alert(event.data)
+    //서버에서 보낸 메시지 청취하기
+    alert(event.data) //Hello, Client 출력
   })
 })()
