@@ -11,10 +11,8 @@
   const formEl = document.querySelector('#form')
   const inputEl = document.querySelector('#input')
   const chatsEl = document.querySelector('#chats')
-  function updateClock() {
-      const now = new Date();
-      const timeString = now.toLocaleTimeString(); // HH:MM:SS
-  }
+  
+  
   
   
   
@@ -23,6 +21,8 @@
     throw new Error('formEl or inputEl or chatsEl is null')
   }
   const chats = []
+
+  //사용자가 입력한 메시지를 보내는 것은 submit에서 한다
   formEl.addEventListener('submit',(e)=>{
     e.preventDefault()
     //데이터를 직렬화 하는 방법은 여러가지가 있는데 가장 쉬운 방법이 JSON.stringify()를 사용하는 것이다.
@@ -36,27 +36,28 @@
       inputEl.value = '' //입력창 비우기(후처리)
     })
     //서버에서 보낸 정보를 받아서 출력하기
+    //onmessage이벤트 핸들러를 websocket제공한다
     socket.addEventListener('message', (event)=> {
-    const { nickname, message } = JSON.parse(event.data);
+    const { nickname, message } = JSON.parse(event.data); //청취한 메세지를 배열에 담는다
     
     // 메시지를 받은 시점의 시간 저장
     let now = new Date();
     let time = now.toLocaleTimeString('ko-KR', {
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: true
     });
-  
-    // chats 에 시간도 함께 저장
     chats.push({ nickname, message, time });
-  
+    
     // 전체 채팅 다시 그리기
     chatsEl.innerHTML = '';
-    chats.forEach(({ nickname, message, time }) => {
+    
+    chats.forEach(({ nickname, message, time }) => { //배열에 담긴 여러 메시지를 출력한다.
       const div = document.createElement('div');
       div.innerText = `${nickname}: ${message} [${time}]`;
       chatsEl.appendChild(div);
     });
+    
   });
     
   })()

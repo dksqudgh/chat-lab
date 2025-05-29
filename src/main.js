@@ -81,7 +81,7 @@ app.ws.use(
       if(ctx.websocket.readyState === ctx.websocket.OPEN) {
         //클라이언트가 연결되어 있으면
         ctx.websocket.send(JSON.stringify({ 
-          message: 'ping' })); //ping 메시지를 보낸다.
+          message: 'ping' }  )); //ping 메시지를 보낸다.
       }
     },30000)
 
